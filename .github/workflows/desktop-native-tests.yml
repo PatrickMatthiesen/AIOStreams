@@ -1,0 +1,23 @@
+name: PR 1909 native desktop tests
+on:
+  push:
+    branches: [ci/pr-1909-native-tests]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: Desktop core (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-15]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: b909b3cc756c606c777bf767157de1541ba60486
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --locked -p aiostreams-desktop-core
+        working-directory: packages/desktop
